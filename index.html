@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EDA Call Desk">
+<meta name="theme-color" content="#0d1016">
+<title>EDA Call Desk</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#090b0f;color:#f7f8fb;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);font-size:15px}
+main{max-width:700px;margin:auto;padding:16px 0 35px}header{display:flex;justify-content:space-between;align-items:flex-start;margin:4px 2px 14px}
+h1{font-size:27px;margin:0;font-weight:900;letter-spacing:-1px}header p{margin:3px 0 0;color:#929bab;font-size:12px}
+#clock{text-align:right;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}#clock small{display:block;color:#8d96a6;font-size:9px;letter-spacing:.8px}
+.search{display:flex;gap:8px;margin:12px 0}.search input,.sheet input,.sheet select{width:100%;border:1px solid #2a3140;background:#151922;color:#fff;border-radius:14px;padding:13px;font-size:16px;outline:none}
+.btn{border:1px solid #303746;background:#171b24;color:#fff;border-radius:13px;padding:10px 12px;font-weight:800}.primary{background:#e9edf3;color:#0a0c10;border:0}
+.filters{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.filters button{white-space:nowrap}
+.section{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#929bab;font-weight:800;margin:18px 3px 7px}
+.card,.sheet{background:#11151d;border:1px solid #252c38;border-radius:20px;padding:14px;margin:9px 0}.top{display:flex;justify-content:space-between;gap:10px}.name{font-size:19px;font-weight:900}.sub{font-size:11px;color:#9aa3b3;margin-top:3px}
+.status{display:inline-block;margin-top:8px;font-size:11px;font-weight:900;padding:5px 8px;border-radius:999px;background:#252b35}.open{color:#5be39a}.closed{color:#ff6d7d}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions a{text-decoration:none;color:#fff}.hours{margin-top:11px;font-size:12px;color:#c6ccd6}.hours details summary{cursor:pointer;color:#e6e9ee;font-weight:800}.hourrow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #202630}.hourrow:last-child{border:0}
+.minirow{display:flex;gap:7px;overflow:auto}.mini{min-width:145px;text-align:left;background:#11151d;color:#fff;border:1px solid #293241;border-radius:16px;padding:11px}.mini b{display:block;font-size:14px}.mini span{display:block;color:#9fa9b9;font-size:10px;margin-top:3px}
+.call{background:#191f2a;border-radius:17px;padding:13px}.callbig{font-size:23px;font-weight:900}.good{color:#4fe28a}.bad{color:#ff6576}.warn{color:#ffd166}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.grid>div{background:#11151d;border-radius:13px;padding:10px}.grid small{display:block;color:#9fa9b9;font-size:8px;letter-spacing:.7px}.grid b{font-size:14px}
+.empty{color:#929bab;text-align:center;padding:25px}.hide{display:none}
+</style>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#090b0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EDA Call Desk">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+</head><body><main>
+<header><div><h1>🦷 EDA Call Desk</h1><p>Emergency Dental of America • Call Center Companion</p></div><div id="clock">--<small>CENTRAL TIME</small></div></header>
+
+<div id="current" class="card hide"></div>
+
+<div class="section">Quick access</div>
+<div class="filters">
+<button class="btn primary" onclick="showOpen()">🟢 Open now</button>
+<button class="btn" onclick="focusSearch()">🔎 Find location</button>
+<button class="btn" onclick="showAll()">All 23</button>
+</div>
+
+<div class="search"><input id="search" placeholder="Search city, state, or ZIP…" autocomplete="off"><button class="btn" onclick="clearSearch()">Clear</button></div>
+<div id="miniArea"></div>
+
+<div class="section">⏱️ Scheduling converter</div>
+<section class="sheet">
+<div class="grid"><div><small>OFFICE</small><select id="office"></select></div><div><small>REQUESTED OFFICE LOCAL TIME</small><input id="localTime" type="time" value="10:00"></div></div>
+<div class="call" style="margin-top:9px"><div class="callbig" id="ctOut">-- CT</div><div id="offerMsg" style="font-size:12px;color:#9fa9b9;margin-top:4px">Enter a requested appointment time.</div></div>
+<div class="grid"><div><small>OFFICE LOCAL</small><b id="localOut">--</b></div><div><small>CENTRAL</small><b id="ctSmall">--</b></div></div>
+</section>
+
+<div class="section">🔄 Central → office local</div>
+<section class="sheet">
+<div class="grid"><div><small>OFFICE</small><select id="reverseOffice"></select></div><div><small>CENTRAL TIME</small><input id="centralTime" type="time" value="15:00"></div></div>
+<div id="reverseMsg" class="call" style="margin-top:9px;font-size:13px;line-height:1.45">Enter a Central time.</div>
+</section>
+
+<div class="section">Locations</div><div id="list"></div>
+</main>
+<script>
+const DATA=[{"name":"Dayton","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"937-709-5911","address":"30 W Rahn Rd Suite 20, Dayton, OH 45429","hours":[["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Oklahoma City","state":"OK","tz":"America/Chicago","zone":"Central","phone":"405-876-4911","address":"930 SW 107th St Ste 100, Oklahoma City, OK 73170","hours":[["09:00","21:00"],null,null,["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["11:00","21:00"]]},{"name":"Phoenix","state":"AZ","tz":"America/Phoenix","zone":"Arizona","phone":"480-908-9991","address":"4910 East Greenway Road, Suite 7, Scottsdale, AZ 85254","hours":[["09:00","19:00"],null,null,["11:00","20:00"],["11:00","20:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Sacramento","state":"CA","tz":"America/Los_Angeles","zone":"Pacific","phone":"916-510-0199","address":"2650 21st St Ste 4, Sacramento, CA 95818","hours":[["11:00","20:00"],["11:00","20:00"],null,["11:00","20:00"],["11:00","20:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Denver","state":"CO","tz":"America/Denver","zone":"Mountain","phone":"303-848-3311","address":"4200 E. 8th Ave, Ste. 200, Denver, CO 80220","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Colorado Springs","state":"CO","tz":"America/Denver","zone":"Mountain","phone":"719-345-9611","address":"402 W Garden of the Gods Rd, Suite 100, Colorado Springs, CO 80907","hours":[["09:00","21:00"],null,null,null,["09:00","21:00"],["09:00","21:00"],["11:00","21:00"]]},{"name":"Detroit","state":"MI","tz":"America/New_York","zone":"Eastern","phone":"313-710-9199","address":"28755 Schoenherr Rd, Warren, MI 48088","hours":[["10:30","19:30"],["10:30","19:30"],["09:00","18:00"],["09:00","18:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Salt Lake City","state":"UT","tz":"America/Denver","zone":"Mountain","phone":"801-980-9991","address":"7370 South Creek Rd #104, Sandy, UT 84093","hours":[["09:00","21:00"],["09:00","21:00"],null,["09:00","21:00"],["09:00","18:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Omaha","state":"NE","tz":"America/Chicago","zone":"Central","phone":"402-593-9911","address":"11229 W Dodge Rd, Omaha, NE 68154","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Las Vegas","state":"NV","tz":"America/Los_Angeles","zone":"Pacific","phone":"702-979-2591","address":"5890 South Durango Drive Ste 105, Las Vegas, NV 89113","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"St. Louis","state":"MO","tz":"America/Chicago","zone":"Central","phone":"314-350-6119","address":"10000 Watson Road, Suite 2-M-M South Building, St. Louis, MO 63126","hours":[["12:00","21:00"],["10:00","18:00"],null,["14:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Kansas City","state":"MO","tz":"America/Chicago","zone":"Central","phone":"816-296-9112","address":"1050 W Blue Ridge Blvd., Kansas City, MO 64145","hours":[["09:00","21:00"],["09:00","21:00"],null,["15:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Nashville","state":"TN","tz":"America/Chicago","zone":"Central","phone":"615-205-9118","address":"15576 Old Hickory Blvd, Nashville, TN 37211","hours":[["12:00","21:00"],["09:00","17:00"],null,["12:00","20:30"],["09:00","20:30"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Grand Rapids","state":"MI","tz":"America/New_York","zone":"Eastern","phone":"616-899-9112","address":"847 Parchment Dr. SE STE 110, Grand Rapids, MI 49546","hours":[["13:00","21:00"],["13:00","21:00"],["09:00","21:00"],["15:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Milwaukee","state":"WI","tz":"America/Chicago","zone":"Central","phone":"414-800-9919","address":"9305 W National Ave, Milwaukee, WI 53227","hours":[["10:00","20:00"],["10:00","20:00"],["10:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Virginia Beach","state":"VA","tz":"America/New_York","zone":"Eastern","phone":"757-977-0911","address":"4667 Haygood Road, Suite 501, Virginia Beach, VA 23455","hours":[["13:00","21:00"],["13:00","21:00"],null,["12:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Buffalo","state":"NY","tz":"America/New_York","zone":"Eastern","phone":"716-671-3911","address":"9515 Main St, Clarence, NY 14031","hours":[["09:00","17:00"],null,null,["13:00","21:00"],["09:00","17:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Columbus","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"380-600-9112","address":"4034 Morse Road, Columbus, OH 43219","hours":[["15:00","21:00"],null,["09:00","17:00"],["09:00","17:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Cleveland","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"440-595-5911","address":"6865 Pearl Road, Middleburg Heights, OH 44130","hours":[["10:00","18:00"],null,null,["12:00","21:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Jacksonville","state":"FL","tz":"America/New_York","zone":"Eastern","phone":"904-747-9113","address":"9770 Baymeadows Rd Suite 113, Jacksonville, FL 32256","hours":[["09:00","21:00"],["11:00","21:00"],["09:00","21:00"],["12:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Cincinnati","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"513-216-4991","address":"3349 Whitfield Ave, Cincinnati, OH 45220","hours":[["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Tulsa","state":"OK","tz":"America/Chicago","zone":"Central","phone":"918-960-0911","address":"4715 East 91st St STE 110, Tulsa, OK 74137","hours":[["09:00","21:00"],null,null,["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]}];
+const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const $=id=>document.getElementById(id);
+const fmt12=s=>{if(!s)return"Closed";let[h,m]=s.split(":").map(Number),a=h>=12?"PM":"AM";h=h%12||12;return `${h}:${String(m).padStart(2,"0")} ${a}`};
+function localParts(tz,d=new Date()){return new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(d)}
+function dayIndex(tz){let w=localParts(tz).find(x=>x.type=="weekday").value;return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(w)}
+function timeToMin(s){if(!s)return null;let[h,m]=s.split(":").map(Number);return h*60+m}
+function zonedConvert(tzFrom,tzTo,hm,d=new Date()){
+ const [h,m]=hm.split(":").map(Number);
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:tzFrom,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
+ const y=+parts.find(x=>x.type=="year").value,mo=+parts.find(x=>x.type=="month").value,da=+parts.find(x=>x.type=="day").value;
+ let guess=Date.UTC(y,mo-1,da,h,m);
+ for(let i=0;i<4;i++){
+   const p=new Intl.DateTimeFormat("en-US",{timeZone:tzFrom,hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date(guess));
+   const hh=+p.find(x=>x.type=="hour").value,mm=+p.find(x=>x.type=="minute").value;
+   guess+=guess-Date.UTC(y,mo-1,da,hh,mm);
+ }
+ return new Intl.DateTimeFormat("en-US",{timeZone:tzTo,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date(guess));
+}
+function reverseConvert(tzTo,hm,d=new Date()){
+ const [h,m]=hm.split(":").map(Number);
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
+ const y=+parts.find(x=>x.type=="year").value,mo=+parts.find(x=>x.type=="month").value,da=+parts.find(x=>x.type=="day").value;
+ let guess=Date.UTC(y,mo-1,da,h,m);
+ for(let i=0;i<4;i++){
+   const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date(guess));
+   const hh=+p.find(x=>x.type=="hour").value,mm=+p.find(x=>x.type=="minute").value;
+   guess+=guess-Date.UTC(y,mo-1,da,hh,mm);
+ }
+ return new Intl.DateTimeFormat("en-US",{timeZone:tzTo,hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(guess)).replace(/^24:/,"00:");
+}
+function isOpen(l,hm,d=new Date()){let h=l.hours[dayIndex(l.tz)],m=timeToMin(hm);return !!h&&m>=timeToMin(h[0])&&m<timeToMin(h[1])}
+function nowLocal(l){return new Intl.DateTimeFormat("en-US",{timeZone:l.tz,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date())}
+function setCurrent(i){localStorage.setItem("edaCurrent",i);render();window.scrollTo({top:0,behavior:"smooth"})}
+function endCall(){localStorage.removeItem("edaCurrent");render()}
+function toggleFav(i){let a=JSON.parse(localStorage.getItem("edaFav")||"[]");a=a.includes(i)?a.filter(x=>x!==i):[...a,i];localStorage.setItem("edaFav",JSON.stringify(a));render()}
+function recentAdd(i){let a=JSON.parse(localStorage.getItem("edaRecent")||"[]").filter(x=>x!=i);a.unshift(i);localStorage.setItem("edaRecent",JSON.stringify(a.slice(0,6)))}
+function selectOffice(i){$("office").value=i;$("reverseOffice").value=i;offer();reverse()}
+function offer(){let l=DATA[+$("office").value],v=$("localTime").value;if(!v)return;let ct=zonedConvert(l.tz,"America/Chicago",v),h=l.hours[dayIndex(l.tz)],inside=isOpen(l,v);$("ctOut").textContent=ct+" CT";$("localOut").textContent=fmt12(v);$("ctSmall").textContent=ct;$("offerMsg").innerHTML=inside?`<span class="good">🟢 Within today's published hours.</span><br>Office closes at ${fmt12(h[1])} local.`:`<span class="bad">🔴 Outside today's published hours.</span><br>${h?"Today's hours: "+fmt12(h[0])+"–"+fmt12(h[1])+" local.":"This office is closed today."}`}
+function reverse(){let l=DATA[+$("reverseOffice").value],v=$("centralTime").value;if(!v)return;let local=reverseConvert(l.tz,v),inside=isOpen(l,local),h=l.hours[dayIndex(l.tz)];$("reverseMsg").innerHTML=`Central <b>${fmt12(v)}</b> → <b>${fmt12(local)}</b> ${l.zone} local.<br>`+(inside?`<span class="good">🟢 Within today's hours.</span>`:`<span class="bad">🔴 Outside today's hours.</span>`)}
+function maps(i){return "https://maps.apple.com/?address="+encodeURIComponent(DATA[i].address)}
+function tel(i){return "tel:"+DATA[i].phone.replace(/[^0-9+]/g,"")}
+function card(i){let l=DATA[i],h=l.hours[dayIndex(l.tz)],open=isOpen(l,new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})),fav=JSON.parse(localStorage.getItem("edaFav")||"[]").includes(i);return `<article class="card"><div class="top"><div><div class="name">${l.name}, ${l.state}</div><div class="sub">${l.zone} Time • ${l.address}</div><span class="status ${open?"open":"closed"}">${open?"🟢 OPEN NOW":"🔴 CLOSED NOW"} • ${nowLocal(l)}</span></div><button class="btn" onclick="toggleFav(${i})">${fav?"⭐":"☆"}</button></div><div class="actions"><button class="btn primary" onclick="setCurrent(${i});recentAdd(${i})">📞 USE THIS CALL</button><a class="btn" href="${tel(i)}">☎️ Call</a><a class="btn" href="${maps(i)}">🗺️ Maps</a><button class="btn" onclick="selectOffice(${i})">⏱️ Schedule</button></div><div class="hours"><details><summary>Today's hours: ${h?fmt12(h[0])+"–"+fmt12(h[1]):"Closed"} local</summary><div style="margin-top:6px">${l.hours.map((x,d)=>`<div class="hourrow"><span>${DAYS[d]}</span><span>${x?fmt12(x[0])+"–"+fmt12(x[1]):"Closed"}</span></div>`).join("")}</div></details></div></article>`}
+function render(){let cur=localStorage.getItem("edaCurrent"),c=$("current");if(cur!==null&&DATA[cur]){let l=DATA[cur];c.classList.remove("hide");c.innerHTML=`<div class="top"><div><div class="section" style="margin:0 0 4px">📞 CURRENT CALL</div><div class="name">${l.name}, ${l.state}</div><div class="sub">${l.zone} Time • ${l.address}</div></div><button class="btn" onclick="endCall()">END</button></div><div class="actions"><a class="btn primary" href="${tel(cur)}">☎️ Call Office</a><a class="btn" href="${maps(cur)}">🗺️ Maps</a></div>`;selectOffice(+cur)}else c.classList.add("hide");drawMini();filter()}
+function drawMini(){let fav=JSON.parse(localStorage.getItem("edaFav")||"[]"),rec=JSON.parse(localStorage.getItem("edaRecent")||"[]"),arr=[...new Set([...fav,...rec])].filter(i=>DATA[i]);$("miniArea").innerHTML=arr.length?`<div class="section">⭐ Favorites / recent</div><div class="minirow">${arr.map(i=>`<button class="mini" onclick="setCurrent(${i});recentAdd(${i})"><b>${DATA[i].name}</b><span>${DATA[i].state} • ${DATA[i].zone}</span></button>`).join("")}</div>`:""}
+function filter(){let q=$("search").value.trim().toLowerCase(),arr=DATA.map((l,i)=>[l,i]).filter(([l])=>(l.name+" "+l.state+" "+l.address+" "+l.phone).toLowerCase().includes(q));$("list").innerHTML=arr.length?arr.map(([l,i])=>card(i)).join(""):`<div class="empty">No matching office.</div>`}
+function showOpen(){let q=$("search");q.value="";$("list").innerHTML=DATA.map((l,i)=>[l,i]).filter(([l])=>isOpen(l,new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false}))).map(([l,i])=>card(i)).join("")||`<div class="empty">No offices are open right now.</div>`}
+function showAll(){ $("search").value="";filter()}
+function focusSearch(){$("search").focus()}
+function clearSearch(){$("search").value="";filter()}
+DATA.forEach((l,i)=>{$("office").insertAdjacentHTML("beforeend",`<option value="${i}">${l.name}, ${l.state}</option>`);$("reverseOffice").insertAdjacentHTML("beforeend",`<option value="${i}">${l.name}, ${l.state}</option>`)});
+$("search").addEventListener("input",filter);$("localTime").addEventListener("input",offer);$("office").addEventListener("change",offer);$("centralTime").addEventListener("input",reverse);$("reverseOffice").addEventListener("change",reverse);
+function clock(){$("clock").innerHTML=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(new Date())+"<small>CENTRAL TIME</small>"}setInterval(clock,1000);clock();render();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+  });
+}
+</script>
+</body></html>
