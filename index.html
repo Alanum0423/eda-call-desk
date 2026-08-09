@@ -1,126 +1,236 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="EDA Call Desk">
-<meta name="theme-color" content="#0d1016">
-<title>EDA Call Desk</title>
-<style>
-:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:#090b0f;color:#f7f8fb;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);font-size:15px}
-main{max-width:700px;margin:auto;padding:16px 0 35px}header{display:flex;justify-content:space-between;align-items:flex-start;margin:4px 2px 14px}
-h1{font-size:27px;margin:0;font-weight:900;letter-spacing:-1px}header p{margin:3px 0 0;color:#929bab;font-size:12px}
-#clock{text-align:right;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}#clock small{display:block;color:#8d96a6;font-size:9px;letter-spacing:.8px}
-.search{display:flex;gap:8px;margin:12px 0}.search input,.sheet input,.sheet select{width:100%;border:1px solid #2a3140;background:#151922;color:#fff;border-radius:14px;padding:13px;font-size:16px;outline:none}
-.btn{border:1px solid #303746;background:#171b24;color:#fff;border-radius:13px;padding:10px 12px;font-weight:800}.primary{background:#e9edf3;color:#0a0c10;border:0}
-.filters{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.filters button{white-space:nowrap}
-.section{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#929bab;font-weight:800;margin:18px 3px 7px}
-.card,.sheet{background:#11151d;border:1px solid #252c38;border-radius:20px;padding:14px;margin:9px 0}.top{display:flex;justify-content:space-between;gap:10px}.name{font-size:19px;font-weight:900}.sub{font-size:11px;color:#9aa3b3;margin-top:3px}
-.status{display:inline-block;margin-top:8px;font-size:11px;font-weight:900;padding:5px 8px;border-radius:999px;background:#252b35}.open{color:#5be39a}.closed{color:#ff6d7d}
-.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions a{text-decoration:none;color:#fff}.hours{margin-top:11px;font-size:12px;color:#c6ccd6}.hours details summary{cursor:pointer;color:#e6e9ee;font-weight:800}.hourrow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #202630}.hourrow:last-child{border:0}
-.minirow{display:flex;gap:7px;overflow:auto}.mini{min-width:145px;text-align:left;background:#11151d;color:#fff;border:1px solid #293241;border-radius:16px;padding:11px}.mini b{display:block;font-size:14px}.mini span{display:block;color:#9fa9b9;font-size:10px;margin-top:3px}
-.call{background:#191f2a;border-radius:17px;padding:13px}.callbig{font-size:23px;font-weight:900}.good{color:#4fe28a}.bad{color:#ff6576}.warn{color:#ffd166}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.grid>div{background:#11151d;border-radius:13px;padding:10px}.grid small{display:block;color:#9fa9b9;font-size:8px;letter-spacing:.7px}.grid b{font-size:14px}
-.empty{color:#929bab;text-align:center;padding:25px}.hide{display:none}
-</style>
-
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#090b0f">
-<meta name="mobile-web-app-capable" content="yes">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="EDA Call Desk">
+<meta name="theme-color" content="#090b0f">
+<link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-</head><body><main>
-<header><div><h1>🦷 EDA Call Desk</h1><p>Emergency Dental of America • Call Center Companion</p></div><div id="clock">--<small>CENTRAL TIME</small></div></header>
+<title>EDA Call Desk</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif;--bg:#090b0f;--card:#151922;--card2:#1c2230;--line:#2a3140;--text:#f7f8fb;--muted:#9aa3b3;--accent:#8f87ff;--good:#54d38a;--warn:#ffbf69;--bad:#ff6f7d;--blue:#65b7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% -10%,#29244d 0,#090b0f 38%);color:var(--text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+main{max-width:760px;margin:auto;padding:14px 16px 36px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px 18px}header h1{font-size:24px;line-height:1;margin:0;display:flex;align-items:center;gap:10px}header img{width:42px;height:42px;object-fit:contain}header p{margin:7px 0 0;color:var(--muted);font-size:12px}.clock{text-align:right;font-variant-numeric:tabular-nums}.clock b{display:block;font-size:17px}.clock span{font-size:11px;color:var(--muted)}
+.card{background:linear-gradient(180deg,#171b25,#12151c);border:1px solid var(--line);border-radius:18px;padding:14px;margin:10px 0;box-shadow:0 10px 28px #0003}.hero{border-color:#514b8d;background:linear-gradient(145deg,#201e39,#12151c)}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:1.1px;color:var(--muted);font-weight:800}.title{font-size:21px;font-weight:850;margin:4px 0}.sub{color:var(--muted);font-size:13px;line-height:1.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+button,input,select{font:inherit}button{border:0;border-radius:13px;padding:13px 12px;background:#242b39;color:var(--text);font-weight:800;min-height:46px;touch-action:manipulation}button:active{transform:scale(.98)}button.primary{background:var(--accent);color:#10111a}button.good{background:#1c6b49}button.warn{background:#6b4a1d}button.ghost{background:#1b202a;border:1px solid var(--line)}button.danger{background:#6e2732}.wide{width:100%}
+input,select{width:100%;background:#0e1219;border:1px solid #303746;color:var(--text);border-radius:13px;padding:13px;min-height:46px;outline:none}input:focus,select:focus{border-color:var(--accent)}
+.search{display:flex;gap:8px}.search input{flex:1}.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#242a37;font-size:11px;font-weight:850}.open{color:var(--good)}.closed{color:var(--bad)}.soon{color:var(--warn)}
+.section{margin-top:18px;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:900}
+.location{padding:14px;border:1px solid var(--line);border-radius:16px;background:#12161e;margin:8px 0}.location .top{display:flex;justify-content:space-between;gap:8px}.location h3{margin:0;font-size:17px}.location small{color:var(--muted)}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.actions button{flex:1;min-width:92px}
+.status{margin-top:9px;padding:10px;border-radius:12px;background:#0d1117;border:1px solid #262c37;font-size:13px}.status b{font-size:14px}.status.good{border-color:#286947}.status.warn{border-color:#6d4d1e}.status.bad{border-color:#69313a}
+textarea{width:100%;min-height:90px;background:#0e1219;color:var(--text);border:1px solid #303746;border-radius:13px;padding:12px;font:inherit;resize:vertical}
+.hide{display:none!important}.tiny{font-size:11px;color:var(--muted)}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.empty{text-align:center;color:var(--muted);padding:22px}
+nav{position:sticky;bottom:10px;z-index:20;background:#11151ddd;backdrop-filter:blur(18px);border:1px solid #303746;border-radius:18px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:18px}nav button{min-height:44px;background:transparent;padding:8px;font-size:11px}nav button.active{background:#29263f;color:#c9c4ff}
+.hold{border-left:4px solid var(--warn)}.hold.expired{opacity:.55;border-left-color:var(--muted)}.hold .time{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+@media(min-width:600px){main{padding-left:22px;padding-right:22px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <h1><img src="./logo-transparent.png" alt="">EDA Call Desk</h1>
+    <p>Emergency Dental of America â¢ coordinator companion</p>
+  </div>
+  <div class="clock"><b id="clock">--:--</b><span>CST</span></div>
+</header>
 
-<div id="current" class="card hide"></div>
+<section id="homeView">
+  <div class="card hero">
+    <div class="label">Current call</div>
+    <div class="title" id="currentTitle">No location selected</div>
+    <div class="sub" id="currentSub">Choose the clinic shown on the incoming CallRail call.</div>
+    <div class="grid" style="margin-top:10px">
+      <button class="primary" onclick="go('find')">ð Find clinic</button>
+      <button class="ghost" onclick="go('schedule')">ð Schedule</button>
+    </div>
+    <div class="grid3" style="margin-top:8px">
+      <button class="ghost" onclick="callCurrent()">âï¸ Call</button>
+      <button class="ghost" onclick="mapCurrent()">ðºï¸ Maps</button>
+      <button class="ghost" onclick="clearCurrent()">â Clear</button>
+    </div>
+  </div>
 
-<div class="section">Quick access</div>
-<div class="filters">
-<button class="btn primary" onclick="showOpen()">🟢 Open now</button>
-<button class="btn" onclick="focusSearch()">🔎 Find location</button>
-<button class="btn" onclick="showAll()">All 23</button>
-</div>
+  <div class="card">
+    <div class="row"><div><div class="label">Scheduling snapshot</div><div class="title" id="snapshotTitle">Select a clinic</div></div><span id="snapshotPill" class="pill">â</span></div>
+    <div class="sub" id="snapshotText">The app will calculate the same-day / next-day coordinator window from the clinic's local clock.</div>
+  </div>
 
-<div class="search"><input id="search" placeholder="Search city, state, or ZIP…" autocomplete="off"><button class="btn" onclick="clearSearch()">Clear</button></div>
-<div id="miniArea"></div>
+  <div class="card">
+    <div class="row"><div><div class="label">Active holds</div><div class="title" id="holdCount">None</div></div><button class="warn" onclick="go('holds')">â³ Holds</button></div>
+    <div class="sub">Temporary wait-time notes from Teams. Stored only on this iPhone.</div>
+  </div>
 
-<div class="section">⏱️ Scheduling converter</div>
-<section class="sheet">
-<div class="grid"><div><small>OFFICE</small><select id="office"></select></div><div><small>REQUESTED OFFICE LOCAL TIME</small><input id="localTime" type="time" value="10:00"></div></div>
-<div class="call" style="margin-top:9px"><div class="callbig" id="ctOut">-- CT</div><div id="offerMsg" style="font-size:12px;color:#9fa9b9;margin-top:4px">Enter a requested appointment time.</div></div>
-<div class="grid"><div><small>OFFICE LOCAL</small><b id="localOut">--</b></div><div><small>CENTRAL</small><b id="ctSmall">--</b></div></div>
+  <div class="section">Recent clinics</div>
+  <div id="recentList"></div>
 </section>
 
-<div class="section">🔄 Central → office local</div>
-<section class="sheet">
-<div class="grid"><div><small>OFFICE</small><select id="reverseOffice"></select></div><div><small>CENTRAL TIME</small><input id="centralTime" type="time" value="15:00"></div></div>
-<div id="reverseMsg" class="call" style="margin-top:9px;font-size:13px;line-height:1.45">Enter a Central time.</div>
+<section id="findView" class="hide">
+  <div class="section">Find a clinic</div>
+  <div class="search"><input id="search" placeholder="City, state, ZIP, or phoneâ¦" autocomplete="off"><button onclick="clearSearch()">Clear</button></div>
+  <div class="grid3" style="margin-top:8px"><button class="primary" onclick="showOpen()">ð¢ Open</button><button class="ghost" onclick="showAll()">All 23</button><button class="ghost" onclick="showFavorites()">â­ Favorites</button></div>
+  <div id="list"></div>
 </section>
 
-<div class="section">Locations</div><div id="list"></div>
+<section id="scheduleView" class="hide">
+  <div class="section">Scheduling cockpit</div>
+  <div class="card">
+    <label class="label" for="office">Clinic</label>
+    <select id="office"></select>
+    <div id="scheduleCard" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div class="label">Coordinator note / commission</div>
+    <div class="sub" style="margin:5px 0 9px">Quickly prepare the coordinator name for the form's âOther commentsâ field.</div>
+    <input id="coordName" placeholder="Coordinator name">
+    <button class="primary wide" style="margin-top:8px" onclick="copyCommission()">ð Copy commission note</button>
+    <div id="copyMsg" class="tiny" style="margin-top:7px"></div>
+  </div>
+</section>
+
+<section id="holdsView" class="hide">
+  <div class="section">Clinic holds / wait times</div>
+  <div class="card">
+    <div class="label">Add a Teams hold</div>
+    <div class="grid" style="margin-top:8px"><select id="holdOffice"></select><input id="holdHours" inputmode="decimal" placeholder="Wait hours, e.g. 2"></div>
+    <div class="grid" style="margin-top:8px"><input id="holdNote" placeholder="Optional note"><button class="warn" onclick="addHold()">â³ Add hold</button></div>
+  </div>
+  <div id="holdsList"></div>
+</section>
+
+<nav>
+  <button id="navHome" class="active" onclick="go('home')">ð <br>Home</button>
+  <button id="navFind" onclick="go('find')">ð<br>Find</button>
+  <button id="navSchedule" onclick="go('schedule')">ð<br>Schedule</button>
+  <button id="navHolds" onclick="go('holds')">â³<br>Holds</button>
+</nav>
 </main>
+
 <script>
-const DATA=[{"name":"Dayton","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"937-709-5911","address":"30 W Rahn Rd Suite 20, Dayton, OH 45429","hours":[["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Oklahoma City","state":"OK","tz":"America/Chicago","zone":"Central","phone":"405-876-4911","address":"930 SW 107th St Ste 100, Oklahoma City, OK 73170","hours":[["09:00","21:00"],null,null,["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["11:00","21:00"]]},{"name":"Phoenix","state":"AZ","tz":"America/Phoenix","zone":"Arizona","phone":"480-908-9991","address":"4910 East Greenway Road, Suite 7, Scottsdale, AZ 85254","hours":[["09:00","19:00"],null,null,["11:00","20:00"],["11:00","20:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Sacramento","state":"CA","tz":"America/Los_Angeles","zone":"Pacific","phone":"916-510-0199","address":"2650 21st St Ste 4, Sacramento, CA 95818","hours":[["11:00","20:00"],["11:00","20:00"],null,["11:00","20:00"],["11:00","20:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Denver","state":"CO","tz":"America/Denver","zone":"Mountain","phone":"303-848-3311","address":"4200 E. 8th Ave, Ste. 200, Denver, CO 80220","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Colorado Springs","state":"CO","tz":"America/Denver","zone":"Mountain","phone":"719-345-9611","address":"402 W Garden of the Gods Rd, Suite 100, Colorado Springs, CO 80907","hours":[["09:00","21:00"],null,null,null,["09:00","21:00"],["09:00","21:00"],["11:00","21:00"]]},{"name":"Detroit","state":"MI","tz":"America/New_York","zone":"Eastern","phone":"313-710-9199","address":"28755 Schoenherr Rd, Warren, MI 48088","hours":[["10:30","19:30"],["10:30","19:30"],["09:00","18:00"],["09:00","18:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Salt Lake City","state":"UT","tz":"America/Denver","zone":"Mountain","phone":"801-980-9991","address":"7370 South Creek Rd #104, Sandy, UT 84093","hours":[["09:00","21:00"],["09:00","21:00"],null,["09:00","21:00"],["09:00","18:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Omaha","state":"NE","tz":"America/Chicago","zone":"Central","phone":"402-593-9911","address":"11229 W Dodge Rd, Omaha, NE 68154","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Las Vegas","state":"NV","tz":"America/Los_Angeles","zone":"Pacific","phone":"702-979-2591","address":"5890 South Durango Drive Ste 105, Las Vegas, NV 89113","hours":[["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"St. Louis","state":"MO","tz":"America/Chicago","zone":"Central","phone":"314-350-6119","address":"10000 Watson Road, Suite 2-M-M South Building, St. Louis, MO 63126","hours":[["12:00","21:00"],["10:00","18:00"],null,["14:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Kansas City","state":"MO","tz":"America/Chicago","zone":"Central","phone":"816-296-9112","address":"1050 W Blue Ridge Blvd., Kansas City, MO 64145","hours":[["09:00","21:00"],["09:00","21:00"],null,["15:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Nashville","state":"TN","tz":"America/Chicago","zone":"Central","phone":"615-205-9118","address":"15576 Old Hickory Blvd, Nashville, TN 37211","hours":[["12:00","21:00"],["09:00","17:00"],null,["12:00","20:30"],["09:00","20:30"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Grand Rapids","state":"MI","tz":"America/New_York","zone":"Eastern","phone":"616-899-9112","address":"847 Parchment Dr. SE STE 110, Grand Rapids, MI 49546","hours":[["13:00","21:00"],["13:00","21:00"],["09:00","21:00"],["15:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Milwaukee","state":"WI","tz":"America/Chicago","zone":"Central","phone":"414-800-9919","address":"9305 W National Ave, Milwaukee, WI 53227","hours":[["10:00","20:00"],["10:00","20:00"],["10:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Virginia Beach","state":"VA","tz":"America/New_York","zone":"Eastern","phone":"757-977-0911","address":"4667 Haygood Road, Suite 501, Virginia Beach, VA 23455","hours":[["13:00","21:00"],["13:00","21:00"],null,["12:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Buffalo","state":"NY","tz":"America/New_York","zone":"Eastern","phone":"716-671-3911","address":"9515 Main St, Clarence, NY 14031","hours":[["09:00","17:00"],null,null,["13:00","21:00"],["09:00","17:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Columbus","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"380-600-9112","address":"4034 Morse Road, Columbus, OH 43219","hours":[["15:00","21:00"],null,["09:00","17:00"],["09:00","17:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Cleveland","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"440-595-5911","address":"6865 Pearl Road, Middleburg Heights, OH 44130","hours":[["10:00","18:00"],null,null,["12:00","21:00"],["12:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Jacksonville","state":"FL","tz":"America/New_York","zone":"Eastern","phone":"904-747-9113","address":"9770 Baymeadows Rd Suite 113, Jacksonville, FL 32256","hours":[["09:00","21:00"],["11:00","21:00"],["09:00","21:00"],["12:00","20:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Cincinnati","state":"OH","tz":"America/New_York","zone":"Eastern","phone":"513-216-4991","address":"3349 Whitfield Ave, Cincinnati, OH 45220","hours":[["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","18:00"],["10:00","21:00"],["09:00","21:00"],["09:00","21:00"]]},{"name":"Tulsa","state":"OK","tz":"America/Chicago","zone":"Central","phone":"918-960-0911","address":"4715 East 91st St STE 110, Tulsa, OK 74137","hours":[["09:00","21:00"],null,null,["09:00","21:00"],["09:00","21:00"],["09:00","21:00"],["09:00","21:00"]]}];
+const DATA=[
+{name:"Dayton",state:"OH",tz:"America/New_York",phone:"9377095911",address:"30 W Rahn Rd Suite 20, Dayton, OH 45429",hours:["10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00","12:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Oklahoma City",state:"OK",tz:"America/Chicago",phone:"4058764911",address:"930 SW 107th St Ste 100, Oklahoma City, OK 73170",hours:["09:00-21:00",null,null,"09:00-21:00","09:00-21:00","09:00-21:00","11:00-21:00"]},
+{name:"Phoenix",state:"AZ",tz:"America/Phoenix",phone:"4809089991",address:"4910 East Greenway Road Suite 7, Scottsdale, AZ 85254",hours:["09:00-19:00",null,null,"11:00-20:00","11:00-20:00","09:00-21:00","09:00-21:00"]},
+{name:"Sacramento",state:"CA",tz:"America/Los_Angeles",phone:"9165100199",address:"2650 21st St Ste 4, Sacramento, CA 95818",hours:["11:00-20:00","11:00-20:00",null,"11:00-20:00","11:00-20:00","09:00-21:00","09:00-21:00"]},
+{name:"Denver",state:"CO",tz:"America/Denver",phone:"3038483311",address:"4200 E. 8th Ave, Ste. 200, Denver, CO 80220",hours:["09:00-21:00","09:00-21:00","09:00-21:00","12:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Colorado Springs",state:"CO",tz:"America/Denver",phone:"7193459611",address:"402 W Garden of the Gods Rd, Suite 100, Colorado Springs, CO 80907",hours:["09:00-21:00",null,null,null,"09:00-21:00","09:00-21:00","11:00-21:00"]},
+{name:"Detroit",state:"MI",tz:"America/New_York",phone:"3137109199",address:"28755 Schoenherr Rd, Warren, MI 48088",hours:["10:30-19:30","10:30-19:30","09:00-18:00","09:00-18:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Salt Lake City",state:"UT",tz:"America/Denver",phone:"8019809991",address:"7370 South Creek Rd #104, Sandy, UT 84093",hours:["09:00-21:00","09:00-21:00",null,"09:00-21:00","09:00-18:00","09:00-21:00","09:00-21:00"]},
+{name:"Omaha",state:"NE",tz:"America/Chicago",phone:"4025939911",address:"11229 W Dodge Rd, Omaha, NE 68154",hours:["09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Las Vegas",state:"NV",tz:"America/Los_Angeles",phone:"7029792591",address:"5890 South Durango Drive Ste 105, Las Vegas, NV 89113",hours:["09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"St. Louis",state:"MO",tz:"America/Chicago",phone:"3143506119",address:"10000 Watson Road Suite 2-M-M South Building, St. Louis, MO 63126",hours:["12:00-21:00","10:00-18:00",null,"14:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Kansas City",state:"MO",tz:"America/Chicago",phone:"8162969112",address:"1050 W Blue Ridge Blvd., Kansas City, MO 64145",hours:["09:00-21:00","09:00-21:00",null,"15:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Nashville",state:"TN",tz:"America/Chicago",phone:"6152059118",address:"15576 Old Hickory Blvd, Nashville, TN 37211",hours:["12:00-21:00","09:00-17:00",null,"12:00-20:30","09:00-20:30","09:00-21:00","09:00-21:00"]},
+{name:"Grand Rapids",state:"MI",tz:"America/New_York",phone:"6168999112",address:"847 Parchment Dr. SE STE 110, Grand Rapids, MI 49546",hours:["13:00-21:00","13:00-21:00","09:00-21:00","15:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Milwaukee",state:"WI",tz:"America/Chicago",phone:"4148009919",address:"9305 W National Ave, Milwaukee, WI 53227",hours:["10:00-20:00","10:00-20:00","10:00-20:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Virginia Beach",state:"VA",tz:"America/New_York",phone:"7579770911",address:"4667 Haygood Road, Suite 501, Virginia Beach, VA 23455",hours:["13:00-21:00","13:00-21:00",null,"12:00-20:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Buffalo",state:"NY",tz:"America/New_York",phone:"7166713911",address:"9515 Main St, Clarence, NY 14031",hours:["09:00-17:00",null,null,"13:00-21:00","09:00-17:00","09:00-21:00","09:00-21:00"]},
+{name:"Columbus",state:"OH",tz:"America/New_York",phone:"3806009112",address:"4034 Morse Road, Columbus, OH 43219",hours:["15:00-21:00",null,"09:00-17:00","09:00-17:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Cleveland",state:"OH",tz:"America/New_York",phone:"4405955911",address:"6865 Pearl Road, Middleburg Heights, OH 44130",hours:["10:00-18:00",null,null,"12:00-21:00","12:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Jacksonville",state:"FL",tz:"America/New_York",phone:"9047479113",address:"9770 Baymeadows Rd Suite 113, Jacksonville, FL 32256",hours:["09:00-21:00","11:00-21:00","09:00-21:00","12:00-20:00","09:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Cincinnati",state:"OH",tz:"America/New_York",phone:"5132164991",address:"3349 Whitfield Ave, Cincinnati, OH 45220",hours:["10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00","10:00-21:00","09:00-21:00","09:00-21:00"]},
+{name:"Tulsa",state:"OK",tz:"America/Chicago",phone:"9189600911",address:"4715 East 91st St STE 110, Tulsa, OK 74137",hours:["09:00-21:00",null,null,"09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00"]}
+];
 const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const $=id=>document.getElementById(id);
-const fmt12=s=>{if(!s)return"Closed";let[h,m]=s.split(":").map(Number),a=h>=12?"PM":"AM";h=h%12||12;return `${h}:${String(m).padStart(2,"0")} ${a}`};
-function localParts(tz,d=new Date()){return new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(d)}
-function dayIndex(tz){let w=localParts(tz).find(x=>x.type=="weekday").value;return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(w)}
-function timeToMin(s){if(!s)return null;let[h,m]=s.split(":").map(Number);return h*60+m}
-function zonedConvert(tzFrom,tzTo,hm,d=new Date()){
- const [h,m]=hm.split(":").map(Number);
- const parts=new Intl.DateTimeFormat("en-US",{timeZone:tzFrom,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
- const y=+parts.find(x=>x.type=="year").value,mo=+parts.find(x=>x.type=="month").value,da=+parts.find(x=>x.type=="day").value;
- let guess=Date.UTC(y,mo-1,da,h,m);
- for(let i=0;i<4;i++){
-   const p=new Intl.DateTimeFormat("en-US",{timeZone:tzFrom,hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date(guess));
-   const hh=+p.find(x=>x.type=="hour").value,mm=+p.find(x=>x.type=="minute").value;
-   guess+=guess-Date.UTC(y,mo-1,da,hh,mm);
- }
- return new Intl.DateTimeFormat("en-US",{timeZone:tzTo,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date(guess));
+let current=localStorage.getItem("edaCurrent")||"";
+let fav=JSON.parse(localStorage.getItem("edaFav")||"[]");
+let holds=JSON.parse(localStorage.getItem("edaHolds")||"[]");
+let activeView="home";
+
+function fmt12(t){if(!t)return"Closed";let [h,m]=t.split(":").map(Number),ap=h>=12?"PM":"AM",hh=h%12||12;return `${hh}:${String(m).padStart(2,"0")} ${ap}`}
+function fmtPhone(p){return`(${p.slice(0,3)}) ${p.slice(3,6)}-${p.slice(6)}`}
+function partsInTZ(tz){return new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date())}
+function tzNow(tz){let p=partsInTZ(tz);let g=x=>p.find(a=>a.type===x)?.value;return{year:+g("year"),month:+g("month"),day:+g("day"),dow:DAYS.indexOf(g("weekday")),hour:+g("hour")%24,minute:+g("minute")}}
+function minutesNow(tz){let n=tzNow(tz);return n.hour*60+n.minute}
+function statusFor(l){
+ let n=tzNow(l.tz), s=l.hours[n.dow]; if(!s)return{kind:"closed",label:"Closed today",detail:"No scheduling hours listed today."};
+ let [a,b]=s.split("-").map(x=>{let[q,r]=x.split(":").map(Number);return q*60+r}), now=n.hour*60+n.minute;
+ if(now<a)return{kind:"soon",label:`Opens ${fmt12(s.split("-")[0])}`,detail:`Local time ${fmt12(`${n.hour}:${String(n.minute).padStart(2,"0")}`)}`};
+ if(now>=b)return{kind:"closed",label:"Closed",detail:`Closed at ${fmt12(s.split("-")[1])}`};
+ return{kind:"open",label:"Open now",detail:`Closes ${fmt12(s.split("-")[1])}`};
 }
-function reverseConvert(tzTo,hm,d=new Date()){
- const [h,m]=hm.split(":").map(Number);
- const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
- const y=+parts.find(x=>x.type=="year").value,mo=+parts.find(x=>x.type=="month").value,da=+parts.find(x=>x.type=="day").value;
- let guess=Date.UTC(y,mo-1,da,h,m);
- for(let i=0;i<4;i++){
-   const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date(guess));
-   const hh=+p.find(x=>x.type=="hour").value,mm=+p.find(x=>x.type=="minute").value;
-   guess+=guess-Date.UTC(y,mo-1,da,hh,mm);
- }
- return new Intl.DateTimeFormat("en-US",{timeZone:tzTo,hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(guess)).replace(/^24:/,"00:");
+function scheduleFor(l){
+ let st=statusFor(l),n=tzNow(l.tz),s=l.hours[n.dow];
+ if(!s)return{status:st,mode:"closed",message:"Clinic is closed today. Use the next listed opening day.",window:"â"};
+ let [a,b]=s.split("-").map(x=>{let[q,r]=x.split(":").map(Number);return q*60+r});
+ let now=n.hour*60+n.minute, remain=b-now;
+ if(now>=b)return{status:st,mode:"closed",message:"Clinic has closed for today.",window:"â"};
+ if(now<a)return{status:st,mode:"closed",message:`Clinic opens at ${fmt12(s.split("-")[0])}.`,window:"â"};
+ let end=Math.min(now+240,b), lessThan4=(b-now)<240;
+ if(lessThan4)return{status:st,mode:"next",message:`Less than 4 hours remain before closing. Same-day window is constrained. Coordinator may use the next-day window when applicable.`,window:`Next opening day â¢ ${fmt12(s.split("-")[0])}`};
+ return{status:st,mode:"same",message:`Same-day coordinator window is limited to the next 4 hours and cannot extend past closing.`,window:`Now â ${fmt12(`${Math.floor(end/60)}:${String(end%60).padStart(2,"0")}`)}`};
 }
-function isOpen(l,hm,d=new Date()){let h=l.hours[dayIndex(l.tz)],m=timeToMin(hm);return !!h&&m>=timeToMin(h[0])&&m<timeToMin(h[1])}
-function nowLocal(l){return new Intl.DateTimeFormat("en-US",{timeZone:l.tz,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date())}
-function setCurrent(i){localStorage.setItem("edaCurrent",i);render();window.scrollTo({top:0,behavior:"smooth"})}
-function endCall(){localStorage.removeItem("edaCurrent");render()}
-function toggleFav(i){let a=JSON.parse(localStorage.getItem("edaFav")||"[]");a=a.includes(i)?a.filter(x=>x!==i):[...a,i];localStorage.setItem("edaFav",JSON.stringify(a));render()}
-function recentAdd(i){let a=JSON.parse(localStorage.getItem("edaRecent")||"[]").filter(x=>x!=i);a.unshift(i);localStorage.setItem("edaRecent",JSON.stringify(a.slice(0,6)))}
-function selectOffice(i){$("office").value=i;$("reverseOffice").value=i;offer();reverse()}
-function offer(){let l=DATA[+$("office").value],v=$("localTime").value;if(!v)return;let ct=zonedConvert(l.tz,"America/Chicago",v),h=l.hours[dayIndex(l.tz)],inside=isOpen(l,v);$("ctOut").textContent=ct+" CT";$("localOut").textContent=fmt12(v);$("ctSmall").textContent=ct;$("offerMsg").innerHTML=inside?`<span class="good">🟢 Within today's published hours.</span><br>Office closes at ${fmt12(h[1])} local.`:`<span class="bad">🔴 Outside today's published hours.</span><br>${h?"Today's hours: "+fmt12(h[0])+"–"+fmt12(h[1])+" local.":"This office is closed today."}`}
-function reverse(){let l=DATA[+$("reverseOffice").value],v=$("centralTime").value;if(!v)return;let local=reverseConvert(l.tz,v),inside=isOpen(l,local),h=l.hours[dayIndex(l.tz)];$("reverseMsg").innerHTML=`Central <b>${fmt12(v)}</b> → <b>${fmt12(local)}</b> ${l.zone} local.<br>`+(inside?`<span class="good">🟢 Within today's hours.</span>`:`<span class="bad">🔴 Outside today's hours.</span>`)}
-function maps(i){return "https://maps.apple.com/?address="+encodeURIComponent(DATA[i].address)}
-function tel(i){return "tel:"+DATA[i].phone.replace(/[^0-9+]/g,"")}
-function card(i){let l=DATA[i],h=l.hours[dayIndex(l.tz)],open=isOpen(l,new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})),fav=JSON.parse(localStorage.getItem("edaFav")||"[]").includes(i);return `<article class="card"><div class="top"><div><div class="name">${l.name}, ${l.state}</div><div class="sub">${l.zone} Time • ${l.address}</div><span class="status ${open?"open":"closed"}">${open?"🟢 OPEN NOW":"🔴 CLOSED NOW"} • ${nowLocal(l)}</span></div><button class="btn" onclick="toggleFav(${i})">${fav?"⭐":"☆"}</button></div><div class="actions"><button class="btn primary" onclick="setCurrent(${i});recentAdd(${i})">📞 USE THIS CALL</button><a class="btn" href="${tel(i)}">☎️ Call</a><a class="btn" href="${maps(i)}">🗺️ Maps</a><button class="btn" onclick="selectOffice(${i})">⏱️ Schedule</button></div><div class="hours"><details><summary>Today's hours: ${h?fmt12(h[0])+"–"+fmt12(h[1]):"Closed"} local</summary><div style="margin-top:6px">${l.hours.map((x,d)=>`<div class="hourrow"><span>${DAYS[d]}</span><span>${x?fmt12(x[0])+"–"+fmt12(x[1]):"Closed"}</span></div>`).join("")}</div></details></div></article>`}
-function render(){let cur=localStorage.getItem("edaCurrent"),c=$("current");if(cur!==null&&DATA[cur]){let l=DATA[cur];c.classList.remove("hide");c.innerHTML=`<div class="top"><div><div class="section" style="margin:0 0 4px">📞 CURRENT CALL</div><div class="name">${l.name}, ${l.state}</div><div class="sub">${l.zone} Time • ${l.address}</div></div><button class="btn" onclick="endCall()">END</button></div><div class="actions"><a class="btn primary" href="${tel(cur)}">☎️ Call Office</a><a class="btn" href="${maps(cur)}">🗺️ Maps</a></div>`;selectOffice(+cur)}else c.classList.add("hide");drawMini();filter()}
-function drawMini(){let fav=JSON.parse(localStorage.getItem("edaFav")||"[]"),rec=JSON.parse(localStorage.getItem("edaRecent")||"[]"),arr=[...new Set([...fav,...rec])].filter(i=>DATA[i]);$("miniArea").innerHTML=arr.length?`<div class="section">⭐ Favorites / recent</div><div class="minirow">${arr.map(i=>`<button class="mini" onclick="setCurrent(${i});recentAdd(${i})"><b>${DATA[i].name}</b><span>${DATA[i].state} • ${DATA[i].zone}</span></button>`).join("")}</div>`:""}
-function filter(){let q=$("search").value.trim().toLowerCase(),arr=DATA.map((l,i)=>[l,i]).filter(([l])=>(l.name+" "+l.state+" "+l.address+" "+l.phone).toLowerCase().includes(q));$("list").innerHTML=arr.length?arr.map(([l,i])=>card(i)).join(""):`<div class="empty">No matching office.</div>`}
-function showOpen(){let q=$("search");q.value="";$("list").innerHTML=DATA.map((l,i)=>[l,i]).filter(([l])=>isOpen(l,new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false}))).map(([l,i])=>card(i)).join("")||`<div class="empty">No offices are open right now.</div>`}
-function showAll(){ $("search").value="";filter()}
-function focusSearch(){$("search").focus()}
-function clearSearch(){$("search").value="";filter()}
-DATA.forEach((l,i)=>{$("office").insertAdjacentHTML("beforeend",`<option value="${i}">${l.name}, ${l.state}</option>`);$("reverseOffice").insertAdjacentHTML("beforeend",`<option value="${i}">${l.name}, ${l.state}</option>`)});
-$("search").addEventListener("input",filter);$("localTime").addEventListener("input",offer);$("office").addEventListener("change",offer);$("centralTime").addEventListener("input",reverse);$("reverseOffice").addEventListener("change",reverse);
-function clock(){$("clock").innerHTML=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(new Date())+"<small>CENTRAL TIME</small>"}setInterval(clock,1000);clock();render();
+function go(v){
+ activeView=v;
+ ["home","find","schedule","holds"].forEach(x=>$(x+"View").classList.toggle("hide",x!==v));
+ ["Home","Find","Schedule","Holds"].forEach(x=>$("nav"+x).classList.toggle("active",x.toLowerCase()===v));
+ if(v==="home")renderHome();if(v==="find")renderList(DATA);if(v==="schedule")renderSchedule();if(v==="holds")renderHolds();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function setCurrent(name){current=name;localStorage.setItem("edaCurrent",name);let r=JSON.parse(localStorage.getItem("edaRecent")||"[]").filter(x=>x!==name);r.unshift(name);localStorage.setItem("edaRecent",JSON.stringify(r.slice(0,5)));go("home")}
+function getCurrent(){return DATA.find(x=>x.name===current)}
+function callCurrent(){let l=getCurrent();if(l)location.href="tel:"+l.phone}
+function mapCurrent(){let l=getCurrent();if(l)location.href="https://maps.apple.com/?address="+encodeURIComponent(l.address)}
+function clearCurrent(){current="";localStorage.removeItem("edaCurrent");renderHome()}
+function toggleFav(name){fav=fav.includes(name)?fav.filter(x=>x!==name):[...fav,name];localStorage.setItem("edaFav",JSON.stringify(fav));renderList(DATA)}
+function card(l){
+ let st=statusFor(l), sc=scheduleFor(l), isFav=fav.includes(l.name);
+ return `<article class="location">
+ <div class="top"><div><h3>${l.name}, ${l.state}</h3><small>${l.address}</small></div><span class="pill ${st.kind}">${st.label}</span></div>
+ <div class="status ${st.kind}"><b>${st.detail}</b><br><span class="tiny">${fmtPhone(l.phone)} â¢ ${l.tz.replace("America/","")}</span></div>
+ <div class="actions"><button class="primary" onclick="setCurrent('${l.name}')">Use clinic</button><button onclick="location.href='tel:${l.phone}'">âï¸ Call</button><button onclick="location.href='https://maps.apple.com/?address='+encodeURIComponent('${l.address}')">ðºï¸</button><button onclick="toggleFav('${l.name}')">${isFav?"â":"â"}</button></div>
+ <div class="tiny" style="margin-top:8px">${sc.mode==="same"?"ð Same-day window available":sc.mode==="next"?"ð Next-day coordinator window may apply":"ð "+sc.message}</div>
+ </article>`;
+}
+function renderList(arr){$("list").innerHTML=arr.length?arr.map(card).join(""):`<div class="empty">No clinics match that search.</div>`}
+function filter(){let q=$("search").value.trim().toLowerCase();renderList(DATA.filter(l=>(l.name+" "+l.state+" "+l.address+" "+l.phone).toLowerCase().includes(q)))}
+function showOpen(){renderList(DATA.filter(l=>statusFor(l).kind==="open"))}
+function showAll(){renderList(DATA)}
+function showFavorites(){renderList(DATA.filter(l=>fav.includes(l.name)))}
+function clearSearch(){$("search").value="";showAll();$("search").focus()}
+function renderHome(){
+ let l=getCurrent();
+ $("currentTitle").textContent=l?`${l.name}, ${l.state}`:"No location selected";
+ $("currentSub").textContent=l?`${l.address} â¢ ${fmtPhone(l.phone)}`:"Choose the clinic shown on the incoming CallRail call.";
+ $("snapshotTitle").textContent=l?`${l.name} â¢ ${scheduleFor(l).window}`:"Select a clinic";
+ $("snapshotPill").textContent=l?statusFor(l).label:"â";
+ $("snapshotPill").className="pill "+(l?statusFor(l).kind:"");
+ $("snapshotText").textContent=l?scheduleFor(l).message:"The app will calculate the same-day / next-day coordinator window from the clinic's local clock.";
+ renderRecent();renderHoldCount();
+}
+function renderRecent(){
+ let r=JSON.parse(localStorage.getItem("edaRecent")||"[]").map(n=>DATA.find(l=>l.name===n)).filter(Boolean);
+ $("recentList").innerHTML=r.length?r.map(card).join(""):`<div class="empty">No recent clinics yet.</div>`;
+}
+function fillSelects(){
+ ["office","holdOffice"].forEach(id=>$(id).innerHTML=DATA.map((l,i)=>`<option value="${i}">${l.name}, ${l.state}</option>`).join(""));
+ let idx=DATA.findIndex(l=>l.name===current);if(idx>=0)$("office").value=idx;
+}
+function renderSchedule(){
+ fillSelects();let l=DATA[$("office").value||0];let sc=scheduleFor(l),st=sc.status;
+ $("scheduleCard").innerHTML=`<div class="row"><div><div class="title">${l.name}, ${l.state}</div><div class="sub">${l.address}</div></div><span class="pill ${st.kind}">${st.label}</span></div>
+ <div class="status ${sc.mode==="same"?"good":sc.mode==="next"?"warn":"bad"}"><b>${sc.mode==="same"?"ð¢ SAME-DAY WINDOW":sc.mode==="next"?"ð NEXT-DAY COORDINATOR WINDOW":"ð´ NOT CURRENTLY SCHEDULABLE"}</b><br>${sc.message}<br><strong>${sc.window}</strong></div>
+ <div class="grid" style="margin-top:8px"><button onclick="location.href='tel:${l.phone}'">âï¸ ${fmtPhone(l.phone)}</button><button onclick="location.href='https://maps.apple.com/?address='+encodeURIComponent('${l.address}')">ðºï¸ Open Maps</button></div>`;
+}
+function copyCommission(){let n=$("coordName").value.trim();let text=n?`Coordinator: ${n}`:"Coordinator: ";navigator.clipboard?.writeText(text).then(()=>{$("copyMsg").textContent="Copied. Paste into Garvis â Other comments."}).catch(()=>{$("copyMsg").textContent=text})}
+function addHold(){let i=+$("holdOffice").value,h=parseFloat($("holdHours").value),note=$("holdNote").value.trim();if(!Number.isFinite(h)||h<=0)return alert("Enter a wait time in hours.");holds.unshift({id:Date.now(),name:DATA[i].name,hours:h,note,created:Date.now()});localStorage.setItem("edaHolds",JSON.stringify(holds));$("holdHours").value="";$("holdNote").value="";renderHolds();renderHoldCount()}
+function removeHold(id){holds=holds.filter(x=>x.id!==id);localStorage.setItem("edaHolds",JSON.stringify(holds));renderHolds();renderHoldCount()}
+function holdRemaining(h){let ms=h*3600000-(Date.now()-h.created);return Math.max(0,ms)}
+function renderHolds(){
+ holds=holds.filter(h=>Date.now()-h.created<h.hours*3600000);localStorage.setItem("edaHolds",JSON.stringify(holds));
+ $("holdsList").innerHTML=holds.length?holds.map(h=>{let l=DATA.find(x=>x.name===h.name),rem=holdRemaining(h),mins=Math.ceil(rem/60000),hrs=Math.floor(mins/60),m=mins%60;return `<div class="card hold"><div class="row"><div><div class="title">${h.name}</div><div class="sub">${h.note||"Teams hold"} â¢ started ${new Date(h.created).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</div></div><div class="time">${hrs?hrs+"h ":""}${m}m</div></div><button class="danger wide" style="margin-top:9px" onclick="removeHold(${h.id})">Clear hold</button></div>`}).join(""):`<div class="empty">No active clinic holds. Beautiful. Human memory can rest for a moment.</div>`;
+}
+function renderHoldCount(){$("holdCount").textContent=holds.length?`${holds.length} active`: "None"}
+function updateClock(){let d=new Date(),p=new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hour:"numeric",minute:"2-digit",second:"2-digit"}).formatToParts(d),h=p.find(x=>x.type==="hour").value,m=p.find(x=>x.type==="minute").value,s=p.find(x=>x.type==="second").value,ap=p.find(x=>x.type==="dayPeriod").value;$("clock").textContent=`${h}:${m}:${s} ${ap}`;if(activeView==="home"){renderHome()}if(activeView==="schedule"){renderSchedule()}if(activeView==="holds"){renderHolds()}}
+$("search").addEventListener("input",filter);$("office").addEventListener("change",renderSchedule);
+fillSelects();renderHome();renderList(DATA);setInterval(updateClock,1000);
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));
 </script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch(console.error);
-  });
-}
-</script>
-</body></html>
+</body>
+</html>
